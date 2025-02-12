@@ -8,14 +8,44 @@
 
 import UIKit
 import Combine
+import SnapKit
 
 
 
 // View
 class ViewController: UIViewController {
-    var playBtn: UIButton!
-    var pauseBtn: UIButton!
-    var timeLabel: UILabel!
+    var playBtn: UIButton! = {
+        let playBtn = UIButton(type:.system)
+        playBtn.setTitle("Play", for:.normal)
+        playBtn.setTitleColor(.white, for:.normal)
+        playBtn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        playBtn.backgroundColor = .systemGreen
+        playBtn.layer.cornerRadius = 8
+        playBtn.translatesAutoresizingMaskIntoConstraints = false
+        playBtn.addTarget(ViewController.self, action: #selector(playButtonDidTouch(_:)), for:.touchUpInside)
+        return playBtn
+    }()
+
+    var pauseBtn: UIButton! = {
+        let pauseBtn = UIButton(type:.system)
+        pauseBtn.setTitle("Pause", for:.normal)
+        pauseBtn.setTitleColor(.white, for:.normal)
+        pauseBtn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        pauseBtn.backgroundColor = .systemRed
+        pauseBtn.layer.cornerRadius = 8
+        pauseBtn.translatesAutoresizingMaskIntoConstraints = false
+        pauseBtn.addTarget(ViewController.self, action: #selector(pauseButtonDidTouch(_:)), for:.touchUpInside)
+        return pauseBtn
+    }()
+
+    var timeLabel: UILabel! = {
+        let timeLabel = UILabel()
+        timeLabel.textColor = .white
+        timeLabel.font = UIFont.systemFont(ofSize: 40)
+        timeLabel.textAlignment = .center
+        timeLabel.translatesAutoresizingMaskIntoConstraints = false
+        return timeLabel
+    }()
 
     let viewModel = StopwatchViewModel()
     private var cancellables = Set<AnyCancellable>()
@@ -32,32 +62,8 @@ class ViewController: UIViewController {
 
     func setupUI() {
         view.backgroundColor = .black
-
-        timeLabel = UILabel()
-        timeLabel.textColor = .white
-        timeLabel.font = UIFont.systemFont(ofSize: 40)
-        timeLabel.textAlignment = .center
-        timeLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(timeLabel)
-
-        playBtn = UIButton(type:.system)
-        playBtn.setTitle("Play", for:.normal)
-        playBtn.setTitleColor(.white, for:.normal)
-        playBtn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-        playBtn.backgroundColor = .systemGreen
-        playBtn.layer.cornerRadius = 8
-        playBtn.translatesAutoresizingMaskIntoConstraints = false
-        playBtn.addTarget(self, action: #selector(playButtonDidTouch(_:)), for:.touchUpInside)
         view.addSubview(playBtn)
-
-        pauseBtn = UIButton(type:.system)
-        pauseBtn.setTitle("Pause", for:.normal)
-        pauseBtn.setTitleColor(.white, for:.normal)
-        pauseBtn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-        pauseBtn.backgroundColor = .systemRed
-        pauseBtn.layer.cornerRadius = 8
-        pauseBtn.translatesAutoresizingMaskIntoConstraints = false
-        pauseBtn.addTarget(self, action: #selector(pauseButtonDidTouch(_:)), for:.touchUpInside)
         view.addSubview(pauseBtn)
 
         NSLayoutConstraint.activate([
@@ -74,6 +80,29 @@ class ViewController: UIViewController {
             pauseBtn.widthAnchor.constraint(equalToConstant: 100),
             pauseBtn.heightAnchor.constraint(equalToConstant: 50)
         ])
+    }
+
+    func setUpUI() {
+
+
+        timeLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview() // 水平居中
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(100) // 距离安全区域顶部 100
+        }
+
+        playBtn.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(50) // 距离左边 50
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-50) // 距离安全区域底部 50
+            make.width.equalTo(100) // 宽度 100
+            make.height.equalTo(50) // 高度 50
+        }
+
+        pauseBtn.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-50) // 距离右边 50
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-50) // 距离安全区域底部 50
+            make.width.equalTo(100) // 宽度 100
+            make.height.equalTo(50) // 高度 50
+        }
     }
 
     func bindViewModel() {
