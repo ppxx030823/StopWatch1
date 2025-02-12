@@ -47,6 +47,18 @@ class ViewController: UIViewController {
         return timeLabel
     }()
 
+    var restartBtn: UIButton! = {
+        let restartBtn = UIButton(type:.system)
+        restartBtn.setTitle("Restart", for:.normal)
+        restartBtn.setTitleColor(.white, for:.normal)
+        restartBtn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        restartBtn.backgroundColor = .systemRed
+        restartBtn.layer.cornerRadius = 8
+        restartBtn.translatesAutoresizingMaskIntoConstraints = false
+        restartBtn.addTarget(self, action: #selector(restartButtonDidTouch(_:)), for:.touchUpInside)
+        return restartBtn
+    }()
+
     let viewModel = StopwatchViewModel()
     private var cancellables = Set<AnyCancellable>()
 
@@ -56,20 +68,20 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        addupUI()
         setUpUI()
         bindViewModel()
     }
 
-    func addupUI() {
+
+
+    func setUpUI() {
         view.backgroundColor = .black
         view.addSubview(timeLabel)
         view.addSubview(playBtn)
         view.addSubview(pauseBtn)
+        view.addSubview(restartBtn)
 
-    }
 
-    func setUpUI() {
         timeLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview() // 水平居中
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(100) // 距离安全区域顶部 100
@@ -87,6 +99,13 @@ class ViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-50) // 距离安全区域底部 50
             make.width.equalTo(100) // 宽度 100
             make.height.equalTo(50) // 高度 50
+        }
+
+        restartBtn.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(timeLabel.snp.bottom).offset(100)
+            make.width.equalTo(100)
+            make.height.equalTo(50)
         }
     }
 
@@ -111,5 +130,9 @@ class ViewController: UIViewController {
 
     @objc func pauseButtonDidTouch(_ sender: UIButton) {
         viewModel.model.stopTimer()
+    }
+
+    @objc func restartButtonDidTouch(_ sender: UIButton) {
+        viewModel.model.resetTimer()
     }
 }

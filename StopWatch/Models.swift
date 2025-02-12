@@ -32,4 +32,8 @@ class StopwatchModel: ObservableObject {
     @objc func updateCounter() {
         counter += 0.1
     }
+
+    @objc func reStart() {
+        counter = 0.0
+    }
 }
