@@ -6,15 +6,25 @@
 //
 
 import UIKit
+import Combine
 
 
 // ViewModel
-class StopwatchViewModel {
+class StopwatchViewModel: ObservableObject {
+    @Published var counterString: String = "0.0"
+    @Published var isButtonEnabled: Bool = true
+    private var cancellables = Set<AnyCancellable>()
     let model = StopwatchModel()
-    var counterString: String {
-        return String(format: "%.1f", model.counter)
-    }
-    var isButtonEnabled: Bool {
-        return !model.isPlaying
+
+    init() {
+        model.$counter
+           .map { String(format: "%.1f", $0) }
+           .assign(to: \.counterString, on: self)
+           .store(in: &cancellables)
+
+        model.$isPlaying
+           .map {!$0 }
+           .assign(to: \.isButtonEnabled, on: self)
+           .store(in: &cancellables)
     }
 }

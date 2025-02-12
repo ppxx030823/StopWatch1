@@ -7,17 +7,18 @@
 
 
 import UIKit
+import Combine
 
 
 
 // View
 class ViewController: UIViewController {
-
     var playBtn: UIButton!
     var pauseBtn: UIButton!
     var timeLabel: UILabel!
 
     let viewModel = StopwatchViewModel()
+    private var cancellables = Set<AnyCancellable>()
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return.lightContent
@@ -26,14 +27,13 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        updateUI()
+        bindViewModel()
     }
 
     func setupUI() {
         view.backgroundColor = .black
 
         timeLabel = UILabel()
-        timeLabel.text = viewModel.counterString
         timeLabel.textColor = .white
         timeLabel.font = UIFont.systemFont(ofSize: 40)
         timeLabel.textAlignment = .center
@@ -76,19 +76,26 @@ class ViewController: UIViewController {
         ])
     }
 
-    func updateUI() {
-        timeLabel.text = viewModel.counterString
-        playBtn.isEnabled = viewModel.isButtonEnabled
-        pauseBtn.isEnabled = !viewModel.isButtonEnabled
+    func bindViewModel() {
+        viewModel.$counterString
+           .sink { [weak self] value in
+                self?.timeLabel.text = value
+            }
+           .store(in: &cancellables)
+
+        viewModel.$isButtonEnabled
+           .sink { [weak self] value in
+                self?.playBtn.isEnabled = value
+                self?.pauseBtn.isEnabled = !value
+            }
+           .store(in: &cancellables)
     }
 
     @objc func playButtonDidTouch(_ sender: UIButton) {
         viewModel.model.startTimer()
-        updateUI()
     }
 
     @objc func pauseButtonDidTouch(_ sender: UIButton) {
         viewModel.model.stopTimer()
-        updateUI()
     }
 }

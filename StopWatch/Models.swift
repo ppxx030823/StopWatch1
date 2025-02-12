@@ -8,13 +8,9 @@
 import Foundation
 
 // Model
-class StopwatchModel {
-    var counter: Float = 0.0 {
-        didSet {
-            // 在这里可以添加一些数据变化的逻辑，比如保存到持久化存储
-        }
-    }
-    var isPlaying: Bool = false
+class StopwatchModel: ObservableObject {
+    @Published var counter: Float = 0.0
+    @Published var isPlaying: Bool = false
     var timer: Timer?
 
     func startTimer() {
