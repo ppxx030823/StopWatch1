@@ -8,4 +8,13 @@
 import UIKit
 
 
-
+// ViewModel
+class StopwatchViewModel {
+    let model = StopwatchModel()
+    var counterString: String {
+        return String(format: "%.1f", model.counter)
+    }
+    var isButtonEnabled: Bool {
+        return !model.isPlaying
+    }
+}
