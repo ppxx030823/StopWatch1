@@ -22,7 +22,7 @@ class ViewController: UIViewController {
         playBtn.backgroundColor = .systemGreen
         playBtn.layer.cornerRadius = 8
         playBtn.translatesAutoresizingMaskIntoConstraints = false
-        playBtn.addTarget(ViewController.self, action: #selector(playButtonDidTouch(_:)), for:.touchUpInside)
+        playBtn.addTarget(self, action: #selector(playButtonDidTouch(_:)), for:.touchUpInside)
         return playBtn
     }()
 
@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         pauseBtn.backgroundColor = .systemRed
         pauseBtn.layer.cornerRadius = 8
         pauseBtn.translatesAutoresizingMaskIntoConstraints = false
-        pauseBtn.addTarget(ViewController.self, action: #selector(pauseButtonDidTouch(_:)), for:.touchUpInside)
+        pauseBtn.addTarget(self, action: #selector(pauseButtonDidTouch(_:)), for:.touchUpInside)
         return pauseBtn
     }()
 
@@ -56,35 +56,20 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        addupUI()
+        setUpUI()
         bindViewModel()
     }
 
-    func setupUI() {
+    func addupUI() {
         view.backgroundColor = .black
         view.addSubview(timeLabel)
         view.addSubview(playBtn)
         view.addSubview(pauseBtn)
 
-        NSLayoutConstraint.activate([
-            timeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            timeLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100),
-
-            playBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
-            playBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
-            playBtn.widthAnchor.constraint(equalToConstant: 100),
-            playBtn.heightAnchor.constraint(equalToConstant: 50),
-
-            pauseBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
-            pauseBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
-            pauseBtn.widthAnchor.constraint(equalToConstant: 100),
-            pauseBtn.heightAnchor.constraint(equalToConstant: 50)
-        ])
     }
 
     func setUpUI() {
-
-
         timeLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview() // 水平居中
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(100) // 距离安全区域顶部 100
